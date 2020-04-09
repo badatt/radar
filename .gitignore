@@ -1,0 +1,7 @@
+build/
+
+# Python ignores
+**/.venv/
+
+# vs code ignores
+**/.vscode/
