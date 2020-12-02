@@ -6,4 +6,4 @@ Organizational Docs
     :target: https://codetaut.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
 
-Documentation for the org as a whole
+Documentation for the org as a whole.
