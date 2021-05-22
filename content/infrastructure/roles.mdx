@@ -1,0 +1,142 @@
+---
+title: 'Roles'
+metaTitle: 'Setup required roles tenant based infrastructure'
+metaDescription: 'Provides documentation on required roles for creating tenant based infrastructure'
+---
+
+All the members of the `codetautgroup` are actually IAM users. The group members can access to various
+environments (accounts) using a role, that a member can switch to. Lets see a way to setup these roles
+in `codetaut-tst` account.
+
+## Account
+
+We have to create a policy and attach it to a role in every account
+
+### DefaultAccountAccessPolicy
+
+- Login to `codetaut-tst` account AWS console
+- Navigate to [IAM Policies](https://console.aws.amazon.com/iam/home#/policies) and start with _Create policy_
+- Switch to _JSON_ tab, and provide the below policy document in the editor
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "AllowAllExceptFromOrganizatonalExceptions",
+      "Action": "*",
+      "Effect": "Allow",
+      "Resource": "*"
+    },
+    {
+      "Sid": "AssumeRoleDef",
+      "Action": [
+        "iam:AttachRolePolicy",
+        "iam:DeleteRole",
+        "iam:DetachRolePolicy",
+        "iam:PutRolePolicy",
+        "iam:TagRole",
+        "iam:UntagRole",
+        "iam:UpdateRoleDescription",
+        "iam:UpdateAssumeRolePolicy"
+      ],
+      "Effect": "Deny",
+      "Resource": "arn:aws:iam::ACCOUNT-ID:role/DefaultAccountAccessRole"
+    },
+    {
+      "Sid": "AssumeRolePolicyDef",
+      "Action": ["iam:CreatePolicyVersion", "iam:DeletePolicy"],
+      "Effect": "Deny",
+      "Resource": "arn:aws:iam::ACCOUNT-ID:policy/DefaultAccountAccessPolicy"
+    },
+    {
+      "Sid": "DenyingPolicy",
+      "Action": [
+        "organizations:*",
+        "aws-portal:ModifyAccount",
+        "aws-portal:ModifyBilling",
+        "aws-portal:ModifyPaymentMethods",
+        "aws-portal:ViewAccount",
+        "aws-portal:ViewPaymentMethods",
+        "aws-portal:ViewUsage",
+        "access-analyzer:*",
+        "account:DisableRegion",
+        "account:EnableRegion",
+        "budgets:ModifyBudget",
+        "cur:DeleteReportDefinition",
+        "cur:ModifyReportDefinition",
+        "cur:PutReportDefinition",
+        "iam:UpdateRole",
+        "iam:CreateGroup",
+        "iam:CreateUser",
+        "iam:DeleteGroup",
+        "iam:DeleteUser",
+        "iam:GetGroup",
+        "iam:GetUser",
+        "iam:ListGroups",
+        "iam:ListUsers",
+        "iam:UpdateGroup",
+        "iam:UpdateUser",
+        "iam:DeleteAccountPasswordPolicy",
+        "iam:UpdateAccountPasswordPolicy",
+        "iam:GenerateCredentialReport",
+        "iam:GetCredentialReport",
+        "iam:DeleteAccountAlias"
+      ],
+      "Effect": "Deny",
+      "Resource": "*"
+    }
+  ]
+}
+```
+
+- Click with _Preview Policy_
+- Provide the _Name_ as **DefaultAccountAccessPolicy** and _Description_ an **Default policy that applies to an assumed role by an IAM user**
+- Click _Create policy_
+
+### DefaultAccountAccessRole
+
+- Navigate to [IAM Roles](https://console.aws.amazon.com/iam/home#/roles) and start with _Create role_
+- Choose _Another AWS account_
+- In the _Account ID_ field enter the `codetaut` account Id
+
+<div className="gutter-top alert alert-primary">
+  Only by providing the account Id of organization account codetaut will ensure that an IAM user
+  created in that organization shall have access to any other child account created under this
+  organization
+</div>
+
+- Choose _Require MFA_
+- Click _Next: Permissions_
+- Select existing policy _DefaultAccountAccessPolicy_ and proceed.
+- For _Role name_ provide **DefaultAccountAccessRole** and _Role description_ as **Default role to assume for an IAM user can get access to**
+- Click _Create role_
+
+<div className="gutter-top alert alert-primary">
+  This role will be used to switch to by IAM users in order to get access to respective accounts.
+</div>
+
+## Organization
+
+Now that we have assumable role created in the child account `codetaut-tst`, we have to let IAM users / user groups
+be able to assume the `DefaultAccountAccessRole`
+
+- Login to the `codetautgroup` (`codetaut`) account and navigate to [IAM Policies](https://console.aws.amazon.com/iam/home?#/policies)
+- Create a new policy with below document
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": "sts:AssumeRole",
+      "Resource": ["arn:aws:iam::ACCOUNT-ID:role/DefaultAccountAccessRole"]
+    }
+  ]
+}
+```
+
+- Provide a relevant policy _Name_, in our case it should be **CodetautTstDefaultAccountAccessPolicy** and with _Description_ as **Default policy that applies to an assumed role by an IAM user to codetaut-tst account**
+
+<div className="gutter-top alert alert-primary">Attach this policy to IAM users / user groups</div>

@@ -79,7 +79,7 @@ const SubscribeNewsletter = ({ title, canonicalUrl }) => {
       <div id="floating-subscribe" className="floatingSubscribeVisible">
         {/* <FloatingSubscribe handleNewsletterClose={handleNewsletterClose} hideNewsletter={hideNewsletter} location = {location} /> */}
         {!isHasuraCloud ? (
-          <div className="floating-subscribe-wrapper mt-16">
+          <div className="floating-subscribe-wrapper mt-16 hidden">
             <div
               role="button"
               tabIndex="0"
@@ -108,20 +108,16 @@ const SubscribeNewsletter = ({ title, canonicalUrl }) => {
       </div>
       <div className="floatingShareWrapper">
         {hideNewsletter ? (
-          <div className="shareIcon" role="button" tabIndex="0" onClick={() => setHideNewsletter(false)} onKeyDown={() => setHideNewsletter(false)}>
+          <div
+            className="shareIcon"
+            role="button"
+            tabIndex="0"
+            onClick={() => setHideNewsletter(false)}
+            onKeyDown={() => setHideNewsletter(false)}
+          >
             <IconHover baseImgSrc={mailHoverImg} hoverImgSrc={mailHoverImg} altText="Mail" />
           </div>
         ) : null}
-        <a
-          className="shareIcon"
-          href={`https://getpocket.com/save?url=${canonicalUrl}`}
-          data-save-url={`${canonicalUrl}`}
-          data-pocket-count="vertical"
-          data-pocket-align="left"
-        >
-          <IconHover baseImgSrc={pocketsImg} hoverImgSrc={pocketsHoverImg} altText="Pocket" />
-          {/*<img src={isMouseOver ? pocketsImg : pocketsHoverImg} alt='Pocket' />*/}
-        </a>
         <CopyToClipboard text={`${canonicalUrl}`} onCopy={onCopy}>
           <div className="shareIcon">
             <IconHover baseImgSrc={copyImg} hoverImgSrc={copyHoverImg} altText="Copy" />
@@ -156,13 +152,6 @@ const SubscribeNewsletter = ({ title, canonicalUrl }) => {
           <IconHover baseImgSrc={linkedinImg} hoverImgSrc={linkedinHoverImg} altText="Linkedin" />
         </a>
       </div>
-      {isHasuraCloud ? (
-        <div className="subscribeIcon">
-          <div className="shareIcon" role="button" tabIndex="0" onClick={() => setIsHasuraCloud(false)} onKeyDown={() => setIsHasuraCloud(false)}>
-            <IconHover baseImgSrc={hasuraGray} hoverImgSrc={hasuraBlue} altText="Mail" />
-          </div>
-        </div>
-      ) : null}
     </Fragment>
   );
 };
