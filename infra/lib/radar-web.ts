@@ -108,7 +108,7 @@ export class RadarWebStack extends Stack {
     });
 
     const githubDroidAccessPolicy = new PolicyStatement({
-      actions: ['s3:DeleteObject*', 's3:PutObject', 's3:Abort*'],
+      actions: ['s3:DeleteObject*', 's3:PutObject', 's3:Abort*', 's3:ListBucket'],
       effect: Effect.ALLOW,
       principals: [new ArnPrincipal('arn:aws:iam::261778676253:user/github-droid')],
       resources: [this.bucket.bucketArn, `${this.bucket.bucketArn}/*`],
