@@ -265,9 +265,6 @@ cdk.json
 # Parcel default cache directory
 .parcel-cache
 
-# github
-/.github
-
 # IDE
 /.idea
 /.vscode

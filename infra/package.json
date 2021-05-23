@@ -1,0 +1,36 @@
+{
+  "name": "infra",
+  "version": "0.1.0",
+  "license": "MIT",
+  "bin": {
+    "infra": "bin/infra.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "test": "jest",
+    "cdk-sbx": "cp cdk.sbx.json cdk.json && npx cdk deploy sbx-radar-web -c targetEnv=sbx --profile codetaut-sbx",
+    "cdk-prd": "cp cdk.prd.json cdk.json && npx cdk synth radar-web -c targetEnv=prd"
+  },
+  "devDependencies": {
+    "@aws-cdk/assert": "1.95.1",
+    "@types/jest": "^26.0.10",
+    "@types/node": "10.17.27",
+    "aws-cdk": "1.95.1",
+    "jest": "^26.4.2",
+    "ts-jest": "^26.2.0",
+    "ts-node": "^9.0.0",
+    "typescript": "~3.9.7"
+  },
+  "dependencies": {
+    "@aws-cdk/aws-certificatemanager": "1.95.1",
+    "@aws-cdk/aws-cloudfront": "1.95.1",
+    "@aws-cdk/aws-iam": "1.95.1",
+    "@aws-cdk/aws-route53": "1.95.1",
+    "@aws-cdk/aws-route53-targets": "1.95.1",
+    "@aws-cdk/aws-s3": "1.95.1",
+    "@aws-cdk/aws-s3-deployment": "1.95.1",
+    "@aws-cdk/core": "1.95.1",
+    "source-map-support": "^0.5.16"
+  }
+}

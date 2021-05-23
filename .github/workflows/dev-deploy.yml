@@ -1,0 +1,25 @@
+name: Radar Web UI deployment
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  deploy:
+    name: Build and deploying Radar Web UI
+    runs-on: ubuntu-latest
+    environment: develop
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up Node
+        uses: actions/setup-node@v2.1.4
+
+      - name: Installation of dependencies
+        run: npm install
+
+      - name: Build
+        run: yarn build
