@@ -12,7 +12,8 @@ import {
 import { Certificate, CertificateValidation } from '@aws-cdk/aws-certificatemanager';
 import { BucketDeployment, Source } from '@aws-cdk/aws-s3-deployment';
 import { CloudFrontTarget } from '@aws-cdk/aws-route53-targets';
-import { Bucket, ObjectOwnership } from '@aws-cdk/aws-s3';
+import { BlockPublicAccess, Bucket, BucketAccessControl, ObjectOwnership } from '@aws-cdk/aws-s3';
+import { ArnPrincipal, Effect, PolicyStatement, User } from '@aws-cdk/aws-iam';
 
 /**
  * The props for SiteApp Construct
@@ -103,7 +104,17 @@ export class RadarWebStack extends Stack {
 
     this.bucket = new Bucket(this, 'WebsiteBucket', {
       objectOwnership: ObjectOwnership.BUCKET_OWNER_PREFERRED,
+      blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
     });
+
+    const githubDroidAccessPolicy = new PolicyStatement({
+      actions: ['s3:DeleteObject*', 's3:PutObject', 's3:Abort*'],
+      effect: Effect.ALLOW,
+      principals: [new ArnPrincipal('arn:aws:iam::261778676253:user/github-droid')],
+      resources: [this.bucket.bucketArn, `${this.bucket.bucketArn}/*`],
+    });
+
+    this.bucket.addToResourcePolicy(githubDroidAccessPolicy);
 
     new CfnOutput(this, 'WebSiteBucket', {
       value: this.bucket.bucketName,

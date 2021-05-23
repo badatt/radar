@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import 'source-map-support/register';
 import * as cdk from '@aws-cdk/core';
-import { RadarWebStack } from '../stack/radar-web';
+import { RadarWebStack } from '../lib/radar-web';
 
 const app = new cdk.App();
 
