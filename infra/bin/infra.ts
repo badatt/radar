@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 import 'source-map-support/register';
-import * as cdk from '@aws-cdk/core';
-import { RadarWebStack } from '../lib/radar-web';
+import { App } from '@aws-cdk/core';
+import { RadarAppStack } from '../lib';
 
-const app = new cdk.App();
+const app = new App();
 
 const env = {
   account: app.node.tryGetContext('account'),
@@ -12,10 +12,9 @@ const env = {
 
 const targetEnv = app.node.tryGetContext('targetEnv');
 
-new RadarWebStack(app, `${targetEnv}-radar-web`, {
-  rootDomain: app.node.tryGetContext('rootDomain'),
-  siteSubdomain: app.node.tryGetContext('siteSubdomain'),
-  stackName: `${targetEnv}-radar-web`,
+new RadarAppStack(app, `${targetEnv}-radar`, {
+  description: 'Root stack for radar application',
+  stackName: `${targetEnv}-radar`,
   env: env,
 });
 

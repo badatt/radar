@@ -33,4 +33,4 @@ jobs:
 
       - name: Deploy
         working-directory: ./public
-        run: aws s3 sync . s3://sbx-radar-web-websitebucket75c24d94-3467n3rni9r8 --acl bucket-owner-full-control
+        run: aws s3 sync . s3://sbx-radar-radarwebstackn-webappdeploymentbucketf2-18zb4jb1xru6e --acl bucket-owner-full-control
